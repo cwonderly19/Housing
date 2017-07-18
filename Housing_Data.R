@@ -77,7 +77,7 @@ WA_MF_5 <- subset(MF_Housing_5, PROJ_ST == "WA")
 writeOGR(WA_MF_2, dsn = "C:/Users/cwonderly/Documents/Housing/WA_MUltifamily_Two_Units", layer = "WA_MF_Two", driver = "ESRI Shapefile")
 writeOGR(WA_MF_5, dsn = "C:/Users/cwonderly/Documents/Housing/WA_MUltifamily_Five_Units", layer = "WA_MF_Five", driver = "ESRI Shapefile")
 
-#### Combing Housing and Test data into one dataset ####
+#### Combining Housing and Test data into one dataset ####
 
 ## Reading in new shapefile with housing data and school district data and csv with district test data 
 
