@@ -101,10 +101,12 @@ colnames(Two_unit_df)[c(1)] <- "GEOID"
 
 ### Creating full data sets
 
-MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.x = TRUE, NA = "Null")
-MF_with_Performance_full_match<- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = FALSE)
-MF_with_Performance_all_districts <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.y = TRUE, all.x = FALSE)
-MF_with_Performance_all_districts[is.na(MF_with_Performance_all_districts)] <- "NULL"
-MF_with_Performance_control <- subset(MF_with_Performance_all_districts, FID_1 == "NULL")
+MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.x = TRUE)
+#MF_with_Performance_full_match<- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = FALSE)
+#MF_with_Performance_all_districts <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.y = TRUE, all.x = FALSE)
+#MF_with_Performance_all_districts[is.na(MF_with_Performance_all_districts)] <- "NULL"
+#MF_with_Performance_control <- subset(MF_with_Performance_all_districts, FID_1 == "NULL")
+
+write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/housing_with_math.csv")
 
 
