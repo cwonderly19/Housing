@@ -15,6 +15,7 @@ library(sp)
 library(proj4)
 library(spatialEco)
 library(dplyr)
+library(data.table)
 
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 LIHTC <- readOGR(dsn = "C:/Users/cwonderly/Downloads/LIHTC", layer = "LowIncome_Housing_Tax_Credit_Properties", stringsAsFactors = FALSE)
@@ -105,10 +106,82 @@ write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Pr
 
 ### Creating full data sets
 
-MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.x = TRUE)
+MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = TRUE)
+MF_with_Performance <- subset(MF_with_Performance, Year != "2000" & Year != "2001" & Year != "2016" & GEOID != "#N/A" & District != "#N/A") #Removing years without test data or school district matches
 
 ### Saving files to repository
 
 write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/MF_with_Performance.csv")
 
+Trial_Dataset <- MF_with_Performance
 
+Trial_Dataset <- Trial_Dataset[-c(3:7,10:13,16,17)]
+Trial_Dataset[is.na(Trial_Dataset)] <- "NULL"
+
+#Creating Dummy Variables
+Trial_Dataset$LIHTC <- ifelse(Trial_Dataset$HOUSING == "LIHTC", 1,0)
+Trial_Dataset$PUB <- ifelse(Trial_Dataset$HOUSING == "PUB", 1,0)
+Trial_Dataset$P_02 <- ifelse(Trial_Dataset$Year == "2002" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_03 <- ifelse(Trial_Dataset$Year == "2003" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_04 <- ifelse(Trial_Dataset$Year == "2004" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_05 <- ifelse(Trial_Dataset$Year == "2005" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_06 <- ifelse(Trial_Dataset$Year == "2006" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_07 <- ifelse(Trial_Dataset$Year == "2007" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_08 <- ifelse(Trial_Dataset$Year == "2008" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_09 <- ifelse(Trial_Dataset$Year == "2009" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_10 <- ifelse(Trial_Dataset$Year == "2010" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_11 <- ifelse(Trial_Dataset$Year == "2011" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_12 <- ifelse(Trial_Dataset$Year == "2012" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_13 <- ifelse(Trial_Dataset$Year == "2013" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_14 <- ifelse(Trial_Dataset$Year == "2014" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$P_15 <- ifelse(Trial_Dataset$Year == "2015" & Trial_Dataset$HOUSING != "NULL", 1,0)
+Trial_Dataset$WASL <- ifelse(Trial_Dataset$Test == "WASL",1,0)
+Trial_Dataset$HSPE <- ifelse(Trial_Dataset$Test == "HSPE",1,0)
+Trial_Dataset$SBA <- ifelse(Trial_Dataset$Test == "SBA",1,0)
+Trial_Dataset$LIHTC_Units <- ifelse(Trial_Dataset$LIHTC == 1, Trial_Dataset$Units, 0)
+Trial_Dataset$PUB_Units <- ifelse(Trial_Dataset$PUB == 1, Trial_Dataset$Units,0)
+
+
+Trial_Dataset$Share_Meeting_Standard <- as.numeric(Trial_Dataset$Share_Meeting_Standard)
+Trial_Dataset$Level <- as.numeric(Trial_Dataset$Level)
+Trial_Dataset$Units <- as.numeric(Trial_Dataset$Units)
+Trial_Dataset$LIHTC_Units <- as.numeric(Trial_Dataset$LIHTC_Units)
+Trial_Dataset$PUB_Units <- as.numeric(Trial_Dataset$PUB_Units)
+Trial_Dataset[is.na(Trial_Dataset)] <- 0
+Trial_Dataset$Count <- 1
+Trial_Dataset$Year <- as.numeric(Trial_Dataset$Year)
+Trial_Dataset$GEOID <- as.numeric(Trial_Dataset$GEOID)
+
+Trial_Dataset <- Trial_Dataset[-c(3,5,6,9)]
+
+District_Level <- aggregate(Trial_Dataset, by = list(Trial_Dataset$Year,Trial_Dataset$GEOID), FUN = sum)
+
+District_Level$LIHTC <- ifelse(District_Level$LIHTC > 0, 1,0)
+District_Level$PUB <- ifelse(District_Level$PUB> 0, 1,0)
+District_Level$P_02 <- ifelse(District_Level$P_02 > 0, 1,0)
+District_Level$P_03 <- ifelse(District_Level$P_03  > 0, 1,0)
+District_Level$P_04 <- ifelse(District_Level$P_04  > 0, 1,0)
+District_Level$P_05 <- ifelse(District_Level$P_05  > 0, 1,0)
+District_Level$P_06 <- ifelse(District_Level$P_06  > 0, 1,0)
+District_Level$P_07 <- ifelse(District_Level$P_07  > 0, 1,0)
+District_Level$P_08 <- ifelse(District_Level$P_08  > 0, 1,0)
+District_Level$P_09 <- ifelse(District_Level$P_09  > 0, 1,0)
+District_Level$P_10 <- ifelse(District_Level$P_10  > 0, 1,0)
+District_Level$P_11 <- ifelse(District_Level$P_11 > 0, 1,0)
+District_Level$P_12 <- ifelse(District_Level$P_12 > 0, 1,0)
+District_Level$P_13 <- ifelse(District_Level$P_13 > 0, 1,0)
+District_Level$P_14 <- ifelse(District_Level$P_14 > 0, 1,0)
+District_Level$P_15 <- ifelse(District_Level$P_15 > 0, 1,0)
+District_Level$WASL <- ifelse(District_Level$WASL > 0, 1,0)
+District_Level$HSPE <- ifelse(District_Level$HSPE > 0, 1,0)
+District_Level$SBA <- ifelse(District_Level$SBA > 0, 1,0)
+District_Level$Share_Meeting_Standard <- (District_Level$Share_Meeting_Standard/District_Level$Count)
+District_Level$Level <- (District_Level$Level/District_Level$Count)
+
+District_Level <- District_Level[-c(3,4)]
+colnames(District_Level)[1] <- "Year"
+colnames(District_Level)[2] <- "GEOID"
+
+District_Level <- District_Level[c(1,2,4:26,3,27)]
+
+write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv")
