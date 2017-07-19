@@ -1,11 +1,12 @@
 #### Installing and opending packages ####
-#install.packages("rgeos")
-#install.packages("rgdal")
-#install.packages("reshape2")
-#install.packages("ggmap")
-#install.packages("proj4")
-#install.packages("spatialEco")
-#install.packages("dplyr")
+install.packages("rgeos")
+install.packages("rgdal")
+install.packages("reshape2")
+install.packages("ggmap")
+install.packages("proj4")
+install.packages("spatialEco")
+install.packages("dplyr")
+#install.packages("hms")
 library(foreign)
 library(rgeos)
 library(rgdal)
@@ -16,6 +17,8 @@ library(proj4)
 library(spatialEco)
 library(dplyr)
 library(data.table)
+library(hms)
+
 
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 LIHTC <- readOGR(dsn = "C:/Users/cwonderly/Downloads/LIHTC", layer = "LowIncome_Housing_Tax_Credit_Properties", stringsAsFactors = FALSE)
@@ -104,7 +107,7 @@ colnames(Two_unit_df)[c(1)] <- "GEOID"
 
 write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Two_Unit_df.csv")
 
-### Creating full data sets
+#### Creating full data sets #### 
 
 MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = TRUE)
 MF_with_Performance <- subset(MF_with_Performance, Year != "2000" & Year != "2001" & Year != "2016" & GEOID != "#N/A" & District != "#N/A") #Removing years without test data or school district matches
