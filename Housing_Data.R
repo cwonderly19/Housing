@@ -19,8 +19,6 @@ library(dplyr)
 library(data.table)
 library(hms)
 
-# this change is for practice #
-
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 LIHTC <- readOGR(dsn = "C:/Users/cwonderly/Downloads/LIHTC", layer = "LowIncome_Housing_Tax_Credit_Properties", stringsAsFactors = FALSE)
 LIHTC$YR_PIS <- as.numeric(LIHTC$YR_PIS)
