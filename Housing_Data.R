@@ -107,6 +107,6 @@ MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"),
 #MF_with_Performance_all_districts[is.na(MF_with_Performance_all_districts)] <- "NULL"
 #MF_with_Performance_control <- subset(MF_with_Performance_all_districts, FID_1 == "NULL")
 
-write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/housing_with_math.csv")
-
-
+write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/MF_with_Performance.csv")
+write.csv(Test_All_Years, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Test_All_Years.csv")
+write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Two_Unit_df.csv")
