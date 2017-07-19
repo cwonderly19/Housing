@@ -91,6 +91,8 @@ colnames(Test_All_Years)[c(8)] <- "Level"
 Test_All_Years <- Test_All_Years[c(3,4,1:2,5:9)]
 Test_All_Years$Year <- as.character(Test_All_Years$Year)
 
+write.csv(Test_All_Years, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Test_All_Years.csv")
+
 Two_unit_df <- as.data.frame(Two_Unit_MF_SD)
 Two_unit_df <- Two_unit_df[c(1:13)]
 Two_unit_df <- Two_unit_df[c(12,6,1:5,7:11,13)]
@@ -99,14 +101,14 @@ colnames(Two_unit_df)[c(2)] <- "Year"
 Two_unit_df$Year <- as.character(Two_unit_df$Year)
 colnames(Two_unit_df)[c(1)] <- "GEOID"
 
+write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Two_Unit_df.csv")
+
 ### Creating full data sets
 
 MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.x = TRUE)
-#MF_with_Performance_full_match<- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = FALSE)
-#MF_with_Performance_all_districts <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all.y = TRUE, all.x = FALSE)
-#MF_with_Performance_all_districts[is.na(MF_with_Performance_all_districts)] <- "NULL"
-#MF_with_Performance_control <- subset(MF_with_Performance_all_districts, FID_1 == "NULL")
+
+### Saving files to repository
 
 write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/MF_with_Performance.csv")
-write.csv(Test_All_Years, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Test_All_Years.csv")
-write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Two_Unit_df.csv")
+
+
