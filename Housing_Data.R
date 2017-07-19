@@ -195,3 +195,6 @@ District_Level <- District_Level[c(1,2,4:26,3,27)]
 
 #saving district level data as csv to the repository
 write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv")
+
+
+summary(District_Level)
