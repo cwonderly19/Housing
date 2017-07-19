@@ -113,6 +113,8 @@ MF_with_Performance <- subset(MF_with_Performance, Year != "2000" & Year != "200
 
 write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/MF_with_Performance.csv")
 
+#### Creating District Level Dataset ####
+
 Trial_Dataset <- MF_with_Performance
 
 Trial_Dataset <- Trial_Dataset[-c(3:7,10:13,16,17)]
@@ -138,9 +140,10 @@ Trial_Dataset$P_15 <- ifelse(Trial_Dataset$Year == "2015" & Trial_Dataset$HOUSIN
 Trial_Dataset$WASL <- ifelse(Trial_Dataset$Test == "WASL",1,0)
 Trial_Dataset$HSPE <- ifelse(Trial_Dataset$Test == "HSPE",1,0)
 Trial_Dataset$SBA <- ifelse(Trial_Dataset$Test == "SBA",1,0)
-Trial_Dataset$LIHTC_Units <- ifelse(Trial_Dataset$LIHTC == 1, Trial_Dataset$Units, 0)
+Trial_Dataset$LIHTC_Units <- ifelse(Trial_Dataset$LIHTC == 1, Trial_Dataset$Units, 0) 
 Trial_Dataset$PUB_Units <- ifelse(Trial_Dataset$PUB == 1, Trial_Dataset$Units,0)
 
+## Changing all variables to numeric for aggregation
 
 Trial_Dataset$Share_Meeting_Standard <- as.numeric(Trial_Dataset$Share_Meeting_Standard)
 Trial_Dataset$Level <- as.numeric(Trial_Dataset$Level)
@@ -148,13 +151,15 @@ Trial_Dataset$Units <- as.numeric(Trial_Dataset$Units)
 Trial_Dataset$LIHTC_Units <- as.numeric(Trial_Dataset$LIHTC_Units)
 Trial_Dataset$PUB_Units <- as.numeric(Trial_Dataset$PUB_Units)
 Trial_Dataset[is.na(Trial_Dataset)] <- 0
-Trial_Dataset$Count <- 1
+Trial_Dataset$Count <- 1 #this is so the share and level variables can be brought back after aggregating 
 Trial_Dataset$Year <- as.numeric(Trial_Dataset$Year)
 Trial_Dataset$GEOID <- as.numeric(Trial_Dataset$GEOID)
 
-Trial_Dataset <- Trial_Dataset[-c(3,5,6,9)]
+Trial_Dataset <- Trial_Dataset[-c(3,5,6,9)] #unncessary charcater variables 
 
 District_Level <- aggregate(Trial_Dataset, by = list(Trial_Dataset$Year,Trial_Dataset$GEOID), FUN = sum)
+
+##Reassigning the correct values to dummy variables after aggregation
 
 District_Level$LIHTC <- ifelse(District_Level$LIHTC > 0, 1,0)
 District_Level$PUB <- ifelse(District_Level$PUB> 0, 1,0)
@@ -175,13 +180,18 @@ District_Level$P_15 <- ifelse(District_Level$P_15 > 0, 1,0)
 District_Level$WASL <- ifelse(District_Level$WASL > 0, 1,0)
 District_Level$HSPE <- ifelse(District_Level$HSPE > 0, 1,0)
 District_Level$SBA <- ifelse(District_Level$SBA > 0, 1,0)
+#Returning share and level variables to the correct value
 District_Level$Share_Meeting_Standard <- (District_Level$Share_Meeting_Standard/District_Level$Count)
 District_Level$Level <- (District_Level$Level/District_Level$Count)
 
+#Removing the year and geoid variables that were aggregated 
 District_Level <- District_Level[-c(3,4)]
+#renaming the year and geoid variables are created when the orginials were aggregated
 colnames(District_Level)[1] <- "Year"
 colnames(District_Level)[2] <- "GEOID"
 
+#reorganizing data
 District_Level <- District_Level[c(1,2,4:26,3,27)]
 
+#saving district level data as csv to the repository
 write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv")
