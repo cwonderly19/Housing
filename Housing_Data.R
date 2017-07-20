@@ -6,13 +6,14 @@
   # Text led by  ### indicates a new file being read into the environment
 
 #### Installing and opending packages ####
-#install.packages("rgeos")
-#install.packages("rgdal")
-#install.packages("reshape2")
-#install.packages("ggmap")
-#install.packages("proj4")
-#install.packages("spatialEco")
-#install.packages("dplyr")
+install.packages("rgeos")
+install.packages("rgdal")
+install.packages("reshape2")
+install.packages("ggmap")
+install.packages("proj4")
+install.packages("spatialEco")
+install.packages("dplyr")
+#install.packages("hms")
 library(foreign)
 library(rgeos)
 library(rgdal)
@@ -23,6 +24,9 @@ library(proj4)
 library(spatialEco)
 library(dplyr)
 library(data.table)
+library(hms)
+
+# this change is for practice #
 
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 ### Reading in the LIHTC shapoefile from https://egis-hud.opendata.arcgis.com/
@@ -123,7 +127,12 @@ colnames(Two_unit_df)[c(1)] <- "GEOID"
 ## Saving new dataframe of two+ unit housing with districts as csv
 write.csv(Two_unit_df,"C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Two_Unit_df.csv")
 
+<<<<<<< HEAD
 # Creating full data sets by merging the housing and math tests by year and district GEOID
+=======
+#### Creating full data sets #### 
+
+>>>>>>> 96595be020aa52618095187e50d62d718becf189
 MF_with_Performance <- merge(Two_unit_df, Test_All_Years,by = c("Year","GEOID"), all = TRUE)
 MF_with_Performance <- subset(MF_with_Performance, Year != "2000" & Year != "2001" & Year != "2016" 
                               & GEOID != "#N/A" & District != "#N/A") #Removing years without test data or school district matches
