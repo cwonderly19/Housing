@@ -6,14 +6,15 @@
   # Text led by  ### indicates a new file being read into the environment
 
 #### Installing and opending packages ####
-install.packages("rgeos")
-install.packages("rgdal")
-install.packages("reshape2")
-install.packages("ggmap")
-install.packages("proj4")
-install.packages("spatialEco")
-install.packages("dplyr")
+#install.packages("rgeos")
+#install.packages("rgdal")
+#install.packages("reshape2")
+#install.packages("ggmap")
+#install.packages("proj4")
+#install.packages("spatialEco")
+#install.packages("dplyr")
 #install.packages("hms")
+#install.packages("stargazer")
 library(foreign)
 library(rgeos)
 library(rgdal)
@@ -25,6 +26,7 @@ library(spatialEco)
 library(dplyr)
 library(data.table)
 library(hms)
+library(stargazer)
 
 # this change is for practice #
 
@@ -225,9 +227,22 @@ colnames(District_Level)[2] <- "GEOID"
 # Reorganizing data
 District_Level <- District_Level[c(1,2,4:26,3,27)]
 
+# Balancing the panal
+make_balanced <- function(x, years=14, id="GEOID", year="Year") {
+  xlist <- split(x, x[,id])
+  new <- list()
+  dat <- lapply(xlist, function(z) if(length(unique(z[,year])) == years) {new <- z} )
+  dat_ <- do.call(rbind, dat)
+  return(dat_)
+} # to balance the panal
+District_Level <- make_balanced(District_Level) #balancing data
+
 ## Saving district level data as csv to the repository 
-write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv")
+write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv", row.names = FALSE)
+
+District_Level <- as.matrix(District_Level)
+District_Level <- as.data.frame(District_Level)
 
 #### Summary Statistics and Basic Data Analysis ####
-
 summary(District_Level)
+
