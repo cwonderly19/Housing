@@ -257,6 +257,7 @@ District_Level$All_Housing <- 1
 District_Level$Year <- as.integer(District_Level$Year)
 District_Level$GEOID <- as.integer(District_Level$GEOID)
 
+
 ## Saving district level data as csv to the repository 
 write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv", row.names = FALSE)
 
