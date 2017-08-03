@@ -5,7 +5,7 @@
   # Text led by two ## indicates that a file is being saved 
   # Text led by  ### indicates a new file being read into the environment
 
-#### Installing and opending packages ####
+#### Installing packages ####
 #install.packages("rgeos")
 #install.packages("rgdal")
 #install.packages("reshape2")
@@ -15,6 +15,9 @@
 #install.packages("dplyr")
 #install.packages("hms")
 #install.packages("stargazer")
+#install.packages("sas7bdat")
+#install.packages("acs")
+#### Loading in Packages ####
 library(foreign)
 library(rgeos)
 library(rgdal)
@@ -23,12 +26,16 @@ library(ggmap)
 library(sp)
 library(proj4)
 library(spatialEco)
+library(plyr)
 library(dplyr)
 library(data.table)
 library(hms)
 library(stargazer)
-
-# this change is for practice #
+library(sas7bdat)
+library(acs)
+library(sqldf)
+library(ggplot2)
+library(reshape)
 
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 ### Reading in the LIHTC shapoefile from https://egis-hud.opendata.arcgis.com/
@@ -115,7 +122,7 @@ Test_All_Years <- Test_All_Years[c(3,4,1:2,5:9)]
 Test_All_Years$Year <- as.character(Test_All_Years$Year)
 
 ## Saving test data as csv
-write.csv(Test_All_Years, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Test_All_Years.csv")
+write.csv(Test_All_Years, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Test_All_Years.csv", row.names = FALSE)
 
 # Converting from spatial dataframe to regualr dataframe and reorganizing
 Two_unit_df <- as.data.frame(Two_Unit_MF_SD)
@@ -148,6 +155,7 @@ write.csv(MF_with_Performance, "C:/Users/cwonderly/Documents/Housing/Housing_Edu
 # test whether this worked and I did't want to go through and change the name everywhere when it did work, 
 # so it is just going to stay as trial dataset
 
+MF_with_Performance <- MF_with_Performance[-c(1)]
 Trial_Dataset <- MF_with_Performance
 
 Trial_Dataset <- Trial_Dataset[-c(3:7,10:13,16,17)] #Removing unnecessary varibales/string variables
@@ -237,12 +245,51 @@ make_balanced <- function(x, years=14, id="GEOID", year="Year") {
 } # to balance the panal
 District_Level <- make_balanced(District_Level) #balancing data
 
-## Saving district level data as csv to the repository 
-write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv", row.names = FALSE)
+# Creating a placement indicator variable that stays on for all years housing is placed
+District_Level$Placement <- ifelse(District_Level$P_02 == 1 | District_Level$P_03 == 1 | District_Level$P_04 == 1 | District_Level$P_05 == 1 |
+                                     District_Level$P_06 == 1 | District_Level$P_07 == 1 | District_Level$P_08 == 1 | District_Level$P_09 == 1 |
+                                     District_Level$P_10 == 1 | District_Level$P_11 == 1 | District_Level$P_11 == 1 | District_Level$P_12 == 1 |
+                                     District_Level$P_13 == 1 | District_Level$P_14 == 1 | District_Level$P_15 == 1,1,0)
 
 District_Level <- as.matrix(District_Level)
 District_Level <- as.data.frame(District_Level)
+District_Level$All_Housing <- 1
+District_Level$Year <- as.integer(District_Level$Year)
+District_Level$GEOID <- as.integer(District_Level$GEOID)
+
+## Saving district level data as csv to the repository 
+write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv", row.names = FALSE)
+
+#### Creating Tracts - School Districts Dataset ####
+
+### Loading in the school district relationship file from https://nces.ed.gov/programs/edge/geographicRelationshipFiles.aspx
+### This is so tract levels are included in which school districts
+relationship <- read.sas7bdat("~/Housing/Housing_Education_Project/grf15_lea_tract.sas7bdat")
+colnames(relationship)[c(1)] <- "GEOID"
+relationship <- as.matrix(relationship)
+relationship <- as.data.frame(relationship, stringsAsFactors = FALSE)
+### If you need to load in orginial test data
+Test_All_Years <- read.csv("~/Housing/Housing_Education_Project/Test_All_Years.csv", stringsAsFactors = FALSE)
+Test_All_Years <- Test_All_Years[-c(1)]
+# Subsetting Districts to only include year, id, and name and then removing all but one year
+Districts <- Test_All_Years[-c(5:9)]
+Districts <- subset(Districts, Year == 2015)
+# Merging the relationship file with the districts data to create a set of all tracts withtin districts in WA
+tracts_to_districts <- merge(x = relationship, y = Districts, by = "GEOID", all.y = TRUE)
+
+### 
+
+#### Parsing Tract level demographic data for 2005-2015 from ACS ####
+api.key.install(key = "00181e9db4a1eb33f8e2017138540edb90551829") # my registration key, additional keys can be requested at api.census.gov
+
+Tracts = geo.make(state = 53, county = "*", tract = "*") # Naming the geographic level to be collected and at what locations, * indicates all tracts within Washington 
+
+MHI <- acs.fetch(endyear = 2005, span = 5, geography = Tracts, table.number = "B19013", col.names = "pretty")
+
 
 #### Summary Statistics and Basic Data Analysis ####
+#District_Level <- as.matrix(District_Level)
+#District_Level <- as.data.frame(District_Level)
 summary(District_Level)
+
 
