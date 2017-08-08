@@ -193,7 +193,28 @@ Trial_Dataset$Level <- as.numeric(Trial_Dataset$Level)
 Trial_Dataset$Units <- as.numeric(Trial_Dataset$Units)
 Trial_Dataset$LIHTC_Units <- as.numeric(Trial_Dataset$LIHTC_Units)
 Trial_Dataset$PUB_Units <- as.numeric(Trial_Dataset$PUB_Units)
-Trial_Dataset[is.na(Trial_Dataset)] <- 0 # so that the summ function works correctly 
+
+Trial_Dataset$LIHTC <- ifelse(Trial_Dataset$LIHTC == "#NA",0,1)
+Trial_Dataset$PUB <- ifelse(Trial_Dataset$PUB == "#NA",0,1)
+Trial_Dataset$Units<- ifelse(Trial_Dataset$Units == NA,0,1)
+Trial_Dataset$P_02 <- ifelse(Trial_Dataset$P_02 == "#NA",0,1)
+Trial_Dataset$P_03 <- ifelse(Trial_Dataset$P_03 == "#NA",0,1)
+Trial_Dataset$P_04 <- ifelse(Trial_Dataset$P_04 == "#NA",0,1)
+Trial_Dataset$P_05 <- ifelse(Trial_Dataset$P_05 == "#NA",0,1)
+Trial_Dataset$P_06 <- ifelse(Trial_Dataset$P_06 == "#NA",0,1)
+Trial_Dataset$P_07 <- ifelse(Trial_Dataset$P_07 == "#NA",0,1)
+Trial_Dataset$P_08 <- ifelse(Trial_Dataset$P_08 == "#NA",0,1)
+Trial_Dataset$P_09 <- ifelse(Trial_Dataset$P_09 == "#NA",0,1)
+Trial_Dataset$P_10 <- ifelse(Trial_Dataset$P_10 == "#NA",0,1)
+Trial_Dataset$P_11 <- ifelse(Trial_Dataset$P_11 == "#NA",0,1)
+Trial_Dataset$P_12 <- ifelse(Trial_Dataset$P_12 == "#NA",0,1)
+Trial_Dataset$P_13 <- ifelse(Trial_Dataset$P_13 == "#NA",0,1)
+Trial_Dataset$P_14 <- ifelse(Trial_Dataset$P_14 == "#NA",0,1)
+Trial_Dataset$P_15 <- ifelse(Trial_Dataset$P_15 == "#NA",0,1)
+Trial_Dataset$WASL <- ifelse(Trial_Dataset$WASL == "#NA",0,1)
+Trial_Dataset$HSPE <- ifelse(Trial_Dataset$HSPE == "#NA",0,1)
+Trial_Dataset$SBA <- ifelse(Trial_Dataset$SBA == "#NA",0,1)
+
 Trial_Dataset$Count <- 1 #this is so the share and level variables can be brought back after aggregating 
 Trial_Dataset$Year <- as.numeric(Trial_Dataset$Year)
 Trial_Dataset$GEOID <- as.numeric(Trial_Dataset$GEOID)
@@ -261,32 +282,6 @@ District_Level$GEOID <- as.integer(District_Level$GEOID)
 
 ## Saving district level data as csv to the repository 
 write.csv(District_Level, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/District_Level.csv", row.names = FALSE)
-
-#### Creating Tracts - School Districts Dataset ####
-
-### Loading in the school district relationship file from https://nces.ed.gov/programs/edge/geographicRelationshipFiles.aspx
-### This is so tract levels are included in which school districts
-relationship <- read.sas7bdat("~/Housing/Housing_Education_Project/grf15_lea_tract.sas7bdat")
-colnames(relationship)[c(1)] <- "GEOID"
-relationship <- as.matrix(relationship)
-relationship <- as.data.frame(relationship, stringsAsFactors = FALSE)
-### If you need to load in orginial test data
-Test_All_Years <- read.csv("~/Housing/Housing_Education_Project/Test_All_Years.csv", stringsAsFactors = FALSE)
-Test_All_Years <- Test_All_Years[-c(1)]
-# Subsetting Districts to only include year, id, and name and then removing all but one year
-Districts <- Test_All_Years[-c(5:9)]
-Districts <- subset(Districts, Year == 2015)
-# Merging the relationship file with the districts data to create a set of all tracts withtin districts in WA
-tracts_to_districts <- merge(x = relationship, y = Districts, by = "GEOID", all.y = TRUE)
-
-### 
-
-#### Parsing Tract level demographic data for 2005-2015 from ACS ####
-api.key.install(key = "00181e9db4a1eb33f8e2017138540edb90551829") # my registration key, additional keys can be requested at api.census.gov
-
-Tracts = geo.make(state = 53, county = "*", tract = "*") # Naming the geographic level to be collected and at what locations, * indicates all tracts within Washington 
-
-MHI <- acs.fetch(endyear = 2005, span = 5, geography = Tracts, table.number = "B19013", col.names = "pretty")
 
 
 #### Summary Statistics and Basic Data Analysis ####
