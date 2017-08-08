@@ -1,4 +1,4 @@
-Year,GEOID,Share_Meeting_Standard,Level,LIHTC,PUB,P_02,P_03,P_04,P_05,P_06,P_07,P_08,P_09,P_10,P_11,P_12,P_13,P_14,P_15,WASL,HSPE,SBA,LIHTC_Units,PUB_Units,Units,Count,Placement,All_Housing
+"Year","GEOID","Share_Meeting_Standard","Level","LIHTC","PUB","P_02","P_03","P_04","P_05","P_06","P_07","P_08","P_09","P_10","P_11","P_12","P_13","P_14","P_15","WASL","HSPE","SBA","LIHTC_Units","PUB_Units","Units","Count","Placement","All_Housing"
 2002,5300001,25.94,1.785,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0
 2003,5300001,28,1.88,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0
 2004,5300001,45.89,2.31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0
@@ -2743,7 +2743,7 @@ Year,GEOID,Share_Meeting_Standard,Level,LIHTC,PUB,P_02,P_03,P_04,P_05,P_06,P_07,
 2013,5310140,65.79,2.49,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1
 2014,5310140,56.2,2.59,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1
 2015,5310140,42.6,2.34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

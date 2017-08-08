@@ -37,6 +37,7 @@ library(sqldf)
 library(ggplot2)
 library(reshape)
 
+
 #### Reading in Original Shapefile of LIHTC Housing Projects from HUD's geospatial data website ####
 ### Reading in the LIHTC shapoefile from https://egis-hud.opendata.arcgis.com/
 LIHTC <- readOGR(dsn = "C:/Users/cwonderly/Downloads/LIHTC", layer = "LowIncome_Housing_Tax_Credit_Properties", stringsAsFactors = FALSE)
@@ -291,6 +292,6 @@ MHI <- acs.fetch(endyear = 2005, span = 5, geography = Tracts, table.number = "B
 #### Summary Statistics and Basic Data Analysis ####
 #District_Level <- as.matrix(District_Level)
 #District_Level <- as.data.frame(District_Level)
-summary(District_Level)
-
-
+District_Level <- as.matrix(District_Level)
+District_Level <- as.data.frame(District_Level)
+stargazer(District_Level, type = "text", title = "Descriptive Statistics", digit.separate = 3, out = "descriptive_stats.txt")
