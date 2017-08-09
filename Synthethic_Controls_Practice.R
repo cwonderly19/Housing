@@ -96,7 +96,13 @@ stargazer(Synth_Data, type = "text", title = "Descriptive Statistics", digit.sep
 treatment <- subset(Synth_Data, Year != 2002 & Year != 2003 & Year != 2004 & Year != 2005 & Year != 2006 & All_Housing == 1)
 total_treatment <- unique(treatment$GEOID)
 
+<<<<<<< HEAD
 #### Generalized Synthetic Controls ####
+=======
+#Synth_Data <- as.matrix(Synth_Data)
+#Synth_Data <- as.data.frame(Synth_Data)
+
+>>>>>>> f6a818d137f9259b2fc60631bf51750239737ca4
 out <- gsynth(Share_Meeting_Standard ~ All_Housing, data = Synth_Data, 
               index = c("GEOID","Year"), force = "unit",
               CV = FALSE, r = 0 , se = TRUE, 
