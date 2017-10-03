@@ -17,13 +17,22 @@ head(simdata)
 District_Level <- as.matrix(District_Level)
 District_Level <- as.data.frame(District_Level)
 Synth_Practice <- (District_Level)
-Synth_Practice <- Synth_Practice[c(1,2,29,3:28)] # Rearranging columns 
+Synth_Practice <- Synth_Practice[c(2,27,3:26)] # Rearranging columns 
 
 # Removing or interpolating N/As within Level varible
 levels <- dcast(Synth_Practice, Synth_Practice$Year ~ Synth_Practice$GEOID, value.var = "Level") #converting to short format
-levels <- levels[-c(13,15,18,24,36,53,65,70,72,77,80,90)] # If a district had more than 2 years of assessment data missing in a row they were excluded
-levels <- levels[-c(89,95,99)]
-levels <- levels[-c(102,104,105,110,118,135,136,146,176,179)]
+levels <- levels[-c(16,18,22,26,30,41,53,63,79,80,89,90,96,98)] # If a district had more than 2 years of assessment data missing in a row they were excluded
+levels <- levels[-c(91,93,98)]
+levels <- levels[-c(99,100)]
+levels_2 <- levels[c(1,101:262)]
+levels <- levels[c(1:100)]
+levels_2 <- levels_2[-c(4,15,23,30,38,43,52,54,55,60,63,74,96,99,100)]
+levels_2 <- levels_2[-c(96,97,99)]
+levels_2 <- levels_2[-c(99)]
+levels_3 <- levels_2[c(1,101:144)]
+levels_2 <- levels_2[c(1:100)]
+levels_3 <- levels_3[-c(27,38,41)]
+levels <- cbind(levels, levels_2, levels_3)
 
 # Linear approximation of remaining N/A values, except for any missing from 2002
 levels_approx <- as.data.frame(lapply(levels,
@@ -34,16 +43,19 @@ levels_approx <- na.locf(levels_approx, na.rm = FALSE, fromLast = TRUE)
 
 # Converting back to long format
 levels_approx <- melt(levels_approx, id.vars = "Synth_Practice.Year", value.name = "Level", variable.name = "GEOID", na.rm = TRUE)
-levels_approx$variable <- as.character(levels_approx$variable)
-levels_approx <- cSplit(levels_approx, "variable", "X")
+levels_approx$GEOID <- as.character(levels_approx$GEOID)
+levels_approx <- cSplit(levels_approx, "GEOID", "X")
 levels_approx <- as.matrix(levels_approx)
-levels_approx <- as.data.frame(levels_approx)
+levels_approx <- as.data.frame(levels_approx, stringsAsFactors = FALSE)
 levels_approx <- levels_approx[c(1,4,2)]
 colnames(levels_approx)[c(1)] <- "Year"
 colnames(levels_approx)[c(2)] <- "GEOID"
 colnames(levels_approx)[c(3)] <- "Level"
+levels_approx$Year <- as.numeric(levels_approx$Year)
+levels_approx$GEOID <- as.numeric(levels_approx$GEOID)
+levels_approx$Level <- as.numeric(levels_approx$Level)
 # Merging back with original data
-Synth_Practice <- merge(Synth_Practice, levels_approx, by = c("Year", "GEOID"), all = TRUE)
+Synth_Practice <- merge(Synth_Practice, levels_approx, by = c("Year", "GEOID"))
 
 # Repeating again with share variable (see comments above)
 share <- dcast(Synth_Practice, Synth_Practice$Year ~ Synth_Practice$GEOID, value.var = "Share_Meeting_Standard")
@@ -69,6 +81,8 @@ colnames(share_approx)[c(2)] <- "GEOID"
 colnames(share_approx)[c(3)] <- "Share_Meetings_Standard"
 
 Synth_Practice <- merge(Synth_Practice, share_approx, by = c("Year", "GEOID"), all = TRUE)
+
+
 
 # Removing any data from early years that had housing placed 
 Synth_Data <- Synth_Practice[!Synth_Practice$Year == 2002 | Synth_Practice$All_Housing != 1,]
