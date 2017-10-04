@@ -85,8 +85,29 @@ colnames(practice)[1] <- "GEOID"
 Synth_Practice <- merge(Synth_Practice, practice, by = c("GEOID", "Year"))
 Synth_Data <- Synth_Practice[-c(4:21)]
 colnames(Synth_Data)[9] <- "Test_Level"
+colnames(Synth_Data)[10] <- "Treated"
 
+Synth_Data$Treatment <- ifelse(Synth_Data$Units >= 1,1,0)
+Synth_Data$Control <- ifelse(Synth_Data$Treatment == 0 & Synth_Data$All_Housing == 0, 1,0)
 Synth_Data <- make_balanced(Synth_Practice)
 
-write.csv(Synth_Data, "C:/Users/cwonderly/Documents/Housing/Housing_Education_Project/Synth_Data.csv", row.names = FALSE)
+post_treatment_dcast <- dcast(Synth_Data, Synth_Data$GEOID ~ Synth_Data$Year, value.var = "Treatment")
+post_treatment_dcast$'2002' <- ifelse(post_treatment_dcast$'2003'  == 1, 1, post_treatment_dcast$'2014')
+post_treatment_dcast$'2004' <- ifelse(post_treatment_dcast$'2003'  == 1, 1, post_treatment_dcast$'2004')
+post_treatment_dcast$'2005' <- ifelse(post_treatment_dcast$'2004'  == 1, 1, post_treatment_dcast$'2005')
+post_treatment_dcast$'2006' <- ifelse(post_treatment_dcast$'2005'  == 1, 1, post_treatment_dcast$'2006')
+post_treatment_dcast$'2007' <- ifelse(post_treatment_dcast$'2006'  == 1, 1, post_treatment_dcast$'2007')
+post_treatment_dcast$'2008' <- ifelse(post_treatment_dcast$'2007'  == 1, 1, post_treatment_dcast$'2008')
+post_treatment_dcast$'2009' <- ifelse(post_treatment_dcast$'2008'  == 1, 1, post_treatment_dcast$'2009')
+post_treatment_dcast$'2010' <- ifelse(post_treatment_dcast$'2009'  == 1, 1, post_treatment_dcast$'2010')
+post_treatment_dcast$'2011' <- ifelse(post_treatment_dcast$'2010'  == 1, 1, post_treatment_dcast$'2011')
+post_treatment_dcast$'2012' <- ifelse(post_treatment_dcast$'2011'  == 1, 1, post_treatment_dcast$'2012')
+post_treatment_dcast$'2013' <- ifelse(post_treatment_dcast$'2012'  == 1, 1, post_treatment_dcast$'2013')
+post_treatment_dcast$'2014' <- ifelse(post_treatment_dcast$'2013'  == 1, 1, post_treatment_dcast$'2014')
+post_treatment_dcast$'2015' <- ifelse(post_treatment_dcast$'2014'  == 1, 1, post_treatment_dcast$'2015')
+
+
+
+
+write.csv(Synth_Data, "C:/Users/cwond/Documents/Synth_Data.csv", row.names = FALSE)
 
