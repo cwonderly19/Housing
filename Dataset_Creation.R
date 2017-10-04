@@ -91,23 +91,62 @@ Synth_Data$Treatment <- ifelse(Synth_Data$Units >= 1,1,0)
 Synth_Data$Control <- ifelse(Synth_Data$Treatment == 0 & Synth_Data$All_Housing == 0, 1,0)
 Synth_Data <- make_balanced(Synth_Practice)
 
-post_treatment_dcast <- dcast(Synth_Data, Synth_Data$GEOID ~ Synth_Data$Year, value.var = "Treatment")
-post_treatment_dcast$'2002' <- ifelse(post_treatment_dcast$'2003'  == 1, 1, post_treatment_dcast$'2014')
-post_treatment_dcast$'2004' <- ifelse(post_treatment_dcast$'2003'  == 1, 1, post_treatment_dcast$'2004')
-post_treatment_dcast$'2005' <- ifelse(post_treatment_dcast$'2004'  == 1, 1, post_treatment_dcast$'2005')
-post_treatment_dcast$'2006' <- ifelse(post_treatment_dcast$'2005'  == 1, 1, post_treatment_dcast$'2006')
-post_treatment_dcast$'2007' <- ifelse(post_treatment_dcast$'2006'  == 1, 1, post_treatment_dcast$'2007')
-post_treatment_dcast$'2008' <- ifelse(post_treatment_dcast$'2007'  == 1, 1, post_treatment_dcast$'2008')
-post_treatment_dcast$'2009' <- ifelse(post_treatment_dcast$'2008'  == 1, 1, post_treatment_dcast$'2009')
-post_treatment_dcast$'2010' <- ifelse(post_treatment_dcast$'2009'  == 1, 1, post_treatment_dcast$'2010')
-post_treatment_dcast$'2011' <- ifelse(post_treatment_dcast$'2010'  == 1, 1, post_treatment_dcast$'2011')
-post_treatment_dcast$'2012' <- ifelse(post_treatment_dcast$'2011'  == 1, 1, post_treatment_dcast$'2012')
-post_treatment_dcast$'2013' <- ifelse(post_treatment_dcast$'2012'  == 1, 1, post_treatment_dcast$'2013')
-post_treatment_dcast$'2014' <- ifelse(post_treatment_dcast$'2013'  == 1, 1, post_treatment_dcast$'2014')
-post_treatment_dcast$'2015' <- ifelse(post_treatment_dcast$'2014'  == 1, 1, post_treatment_dcast$'2015')
+post_treatment_dcast <- dcast(Synth_Data, Synth_Data$GEOID ~ Synth_Data$Year, value.var = "Treated")
+post_treatment_dcast$'2015_2' <- ifelse(post_treatment_dcast$'2015'  == 1, 0, 0)
+post_treatment_dcast$'2014_2' <- ifelse(post_treatment_dcast$'2014'  == 0 & post_treatment_dcast$'2015' == 1, 1, 0)
+post_treatment_dcast$'2013_2' <- ifelse(post_treatment_dcast$'2013'  == 0 & post_treatment_dcast$'2014' == 1, 1, 0)
+post_treatment_dcast$'2012_2' <- ifelse(post_treatment_dcast$'2012'  == 0 & post_treatment_dcast$'2013' == 1, 1, 0)
+post_treatment_dcast$'2011_2' <- ifelse(post_treatment_dcast$'2011'  == 0 & post_treatment_dcast$'2012' == 1, 1, 0)
+post_treatment_dcast$'2010_2' <- ifelse(post_treatment_dcast$'2010'  == 0 & post_treatment_dcast$'2011' == 1, 1, 0)
+post_treatment_dcast$'2009_2' <- ifelse(post_treatment_dcast$'2009'  == 0 & post_treatment_dcast$'2010' == 1, 1, 0)
+post_treatment_dcast$'2008_2' <- ifelse(post_treatment_dcast$'2008'  == 0 & post_treatment_dcast$'2009' == 1, 1, 0)
+post_treatment_dcast$'2007_2' <- ifelse(post_treatment_dcast$'2007'  == 0 & post_treatment_dcast$'2008' == 1, 1, 0)
+post_treatment_dcast$'2006_2' <- ifelse(post_treatment_dcast$'2006'  == 0 & post_treatment_dcast$'2007' == 1, 1, 0)
+post_treatment_dcast$'2005_2' <- ifelse(post_treatment_dcast$'2005'  == 0 & post_treatment_dcast$'2006' == 1, 1, 0)
+post_treatment_dcast$'2004_2' <- ifelse(post_treatment_dcast$'2004'  == 0 & post_treatment_dcast$'2005' == 1, 1, 0)
+post_treatment_dcast$'2003_2' <- ifelse(post_treatment_dcast$'2003'  == 0 & post_treatment_dcast$'2004' == 1, 1, 0)
+post_treatment_dcast$'2002_2' <- ifelse(post_treatment_dcast$'2002'  == 0 & post_treatment_dcast$'2003' == 1, 1, 0)
 
+post_treatment_dcast <- post_treatment_dcast[-c(2:15)]
+post_treatment_dcast <- post_treatment_dcast[c(1,15,14,13,12,11,10,9,8,7,6,5,4,3,2)]
+colnames(post_treatment_dcast)[2] <- "2002"
+colnames(post_treatment_dcast)[3] <- "2003"
+colnames(post_treatment_dcast)[4] <- "2004"
+colnames(post_treatment_dcast)[5] <- "2005"
+colnames(post_treatment_dcast)[6] <- "2006"
+colnames(post_treatment_dcast)[7] <- "2007"
+colnames(post_treatment_dcast)[8] <- "2008"
+colnames(post_treatment_dcast)[9] <- "2009"
+colnames(post_treatment_dcast)[10] <- "2010"
+colnames(post_treatment_dcast)[11] <- "2011"
+colnames(post_treatment_dcast)[12] <- "2012"
+colnames(post_treatment_dcast)[13] <- "2013"
+colnames(post_treatment_dcast)[14] <- "2014"
+colnames(post_treatment_dcast)[15] <- "2015" 
 
+post_treatment_dcast[is.na(post_treatment_dcast)] <- 0
+post_treatment_dcast$'2014' <- ifelse(post_treatment_dcast$'2015'  == 1, 1, post_treatment_dcast$'2014')
+post_treatment_dcast$'2013' <- ifelse(post_treatment_dcast$'2014'  == 1, 1, post_treatment_dcast$'2013')
+post_treatment_dcast$'2012' <- ifelse(post_treatment_dcast$'2013'  == 1, 1, post_treatment_dcast$'2012')
+post_treatment_dcast$'2011' <- ifelse(post_treatment_dcast$'2012'  == 1, 1, post_treatment_dcast$'2011')
+post_treatment_dcast$'2010' <- ifelse(post_treatment_dcast$'2011'  == 1, 1, post_treatment_dcast$'2010')
+post_treatment_dcast$'2009' <- ifelse(post_treatment_dcast$'2010'  == 1, 1, post_treatment_dcast$'2009')
+post_treatment_dcast$'2008' <- ifelse(post_treatment_dcast$'2009'  == 1, 1, post_treatment_dcast$'2008')
+post_treatment_dcast$'2007' <- ifelse(post_treatment_dcast$'2008'  == 1, 1, post_treatment_dcast$'2007')
+post_treatment_dcast$'2006' <- ifelse(post_treatment_dcast$'2007'  == 1, 1, post_treatment_dcast$'2006')
+post_treatment_dcast$'2005' <- ifelse(post_treatment_dcast$'2006'  == 1, 1, post_treatment_dcast$'2005')
+post_treatment_dcast$'2004' <- ifelse(post_treatment_dcast$'2005'  == 1, 1, post_treatment_dcast$'2004')
+post_treatment_dcast$'2003' <- ifelse(post_treatment_dcast$'2004'  == 1, 1, post_treatment_dcast$'2003')
+post_treatment_dcast$'2002' <- ifelse(post_treatment_dcast$'2003'  == 1, 1, post_treatment_dcast$'2002')
 
+pre_treat <- melt(post_treatment_dcast, id.vars = "Synth_Data$GEOID", value.name = "Pre_Treat", variable.name = "Year")
+colnames(pre_treat)[1] <- "GEOID"
+pre_treat$Year <- as.character(pre_treat$Year)
+pre_treat$Year <- as.numeric(pre_treat$Year)
+Synth_Data <- merge(Synth_Data, pre_treat, by = c("GEOID", "Year"))
 
-write.csv(Synth_Data, "C:/Users/cwond/Documents/Synth_Data.csv", row.names = FALSE)
+Synth_Data$Control <- ifelse(Synth_Data$Pre_Treat == 0 & Synth_Data$Treated == 0 & Synth_Data$Treatment == 0, 1,0)
+Synth_Data$Post_Treatment <- ifelse(Synth_Data$Treated == 1 & Synth_Data$Treatment == 0, 1,0)
+
+write.csv(Synth_Data, "C:/Users/cwond/Documents/Housing_Project/Synth_Data.csv", row.names = FALSE)
 
