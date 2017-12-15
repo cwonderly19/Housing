@@ -1,10 +1,10 @@
 #### Installing Packages ####
-#install.packages("gsynth")
-#install.packages("arm")
-#install.packages("zoo")
-#install.packages("splitstackshape")
+install.packages("gsynth")
+install.packages("arm")
+install.packages("zoo")
+install.packages("splitstackshape")
 #### Loading Packages ####
-library(gsynth)
+ library(gsynth)
 library(arm)
 library(zoo)
 library(plyr)
@@ -150,7 +150,7 @@ Synth_Data <- merge(Synth_Data, pre_treat, by = c("GEOID", "Year"), all = FALSE)
 Synth_Data$Control <- ifelse(Synth_Data$Pre_Treat == 0 & Synth_Data$Treated == 0 & Synth_Data$Treatment == 0, 1,0)
 Synth_Data$Post_Treatment <- ifelse(Synth_Data$Treated == 1 & Synth_Data$Treatment == 0, 1,0)
 
-write.csv(Synth_Data, "C:/Users/cwond/Documents/Housing_Project/Synth_Data.csv", row.names = FALSE)
+#write.csv(Synth_Data, "C:/Users/cwond/Documents/Housing_Project/Synth_Data.csv", row.names = FALSE)
 
 balance <- function(x, years) { 
   xlist <- split(x, x$GEOID) 
@@ -162,3 +162,16 @@ balance <- function(x, years) {
 Synth_Data <- balance(Synth_Data, 14) 
 
 write.csv(Synth_Data, "C:/Users/cwond/Documents/Housing_Project/Balanced_Synth_Data.csv", row.names = FALSE)
+
+Synth_Data <- Synth_Data[!(Synth_Data$Year == 2002 & Synth_Data$Treated == 1),]
+Synth_Data <- Synth_Data[!(Synth_Data$Year == 2003 & Synth_Data$Treated == 1),]
+Synth_Data <- Synth_Data[!(Synth_Data$Year == 2004 & Synth_Data$Treated == 1),]
+Synth_Data <- Synth_Data[!(Synth_Data$Year == 2005 & Synth_Data$Treated == 1),]
+Synth_Data <- Synth_Data[!(Synth_Data$Year == 2006 & Synth_Data$Treated == 1),]
+
+Synth_Data <- balance(Synth_Data, 14)
+out <- gsynth(Test_Level ~ Treated, data = Restricted_Balanced, 
+              index = c("GEOID","Year"), force = "unit",
+              CV = FALSE, r = 0 , se = TRUE, 
+              inference = "parametric", nboots = 1000,
+              parallel = FALSE)
